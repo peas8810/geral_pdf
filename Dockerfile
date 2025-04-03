@@ -2,12 +2,23 @@ FROM python:3.10-slim
 
 # Instalar ferramentas necessárias
 RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    && wget -qO- https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y \
     libreoffice \
+    libreoffice-writer \
+    libreoffice-impress \
+    libreoffice-calc \
     ghostscript \
     poppler-utils \
     tesseract-ocr \
-    tesseract-ocr-por \  # Adicionar suporte a português
+    tesseract-ocr-por \
+    tesseract-ocr-eng \
     libgl1 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
