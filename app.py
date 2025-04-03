@@ -10,13 +10,16 @@ from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from pdf2docx import Converter
 from pdf2image import convert_from_path
 import pytesseract
-import uvicorn
 
 POPPLER_PATH = "/usr/bin"
 WORK_DIR = "documentos"
 os.makedirs(WORK_DIR, exist_ok=True)
 
 app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"mensagem": "API funcionando com sucesso 🚀"}
 
 @app.get("/status")
 def status():
@@ -93,6 +96,9 @@ def dividir_pdf(file: UploadFile = File(...)):
 @app.post("/ocr-pdf")
 def ocr_pdf(file: UploadFile = File(...)):
     try:
+        if not shutil.which("tesseract"):
+            return JSONResponse(content={"erro": "Tesseract não está instalado."}, status_code=500)
+
         caminho = salvar_arquivos([file])[0]
         imagens = convert_from_path(caminho, poppler_path=POPPLER_PATH)
         texto = ""
@@ -109,6 +115,9 @@ def ocr_pdf(file: UploadFile = File(...)):
 @app.post("/ocr-imagem")
 def ocr_imagem(files: List[UploadFile] = File(...)):
     try:
+        if not shutil.which("tesseract"):
+            return JSONResponse(content={"erro": "Tesseract não está instalado."}, status_code=500)
+
         caminhos = salvar_arquivos(files)
         texto = ""
         for i, caminho in enumerate(caminhos):
@@ -138,6 +147,3 @@ def pdf_para_pdfa(file: UploadFile = File(...)):
         return JSONResponse(content={"erro": "Falha ao converter para PDF/A"}, status_code=500)
     except Exception as e:
         return JSONResponse(content={"erro": str(e)}, status_code=500)
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
