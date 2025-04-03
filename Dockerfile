@@ -1,31 +1,30 @@
+# Dockerfile
+FROM python:3.10-slim
+
+# Instalar ferramentas necessárias
 RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg2 \
-    software-properties-common \
-    && wget -qO- https://deb.nodesource.com/setup_16.x | bash - \
-    && add-apt-repository -y ppa:libreoffice/ppa \
-    && apt-get update && apt-get install -y \
     libreoffice \
-    libreoffice-writer \
-    libreoffice-calc \
     ghostscript \
     poppler-utils \
     tesseract-ocr \
-    tesseract-ocr-por \
     libgl1 \
-    libsm6 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Diretório de trabalho
 WORKDIR /app
 
+# Copiar dependências e instalar
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copiar o restante do código
 COPY . .
 
-RUN mkdir -p /app/documentos
+# Criar pasta de trabalho se não existir
+RUN mkdir -p documentos
 
+# Expor porta da API
 EXPOSE 8000
 
+# Comando para rodar FastAPI
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
