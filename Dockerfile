@@ -1,7 +1,6 @@
-# Dockerfile
 FROM python:3.10-slim
 
-# Instalar ferramentas necessárias
+# Instalar dependências de sistema
 RUN apt-get update && apt-get install -y \
     libreoffice \
     ghostscript \
@@ -10,18 +9,19 @@ RUN apt-get update && apt-get install -y \
     libgl1 \
     && apt-get clean
 
-# Criar diretório de trabalho
+# Diretório de trabalho
 WORKDIR /app
 
-# Copiar dependências e instalar
+# Copiar dependências
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar código-fonte
+# Copiar código
 COPY . .
 
-# Expor a porta padrão
+# Expor porta da API
 EXPOSE 8000
 
-# Comando para rodar a API FastAPI
+# Rodar FastAPI com uvicorn
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+
