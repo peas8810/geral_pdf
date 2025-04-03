@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
-from typing import List  # Importação adicionada
+from typing import List
 import os
 import shutil
 import subprocess
@@ -114,7 +114,43 @@ async def word_para_pdf(files: List[UploadFile] = File(...)):
             detail=f"Erro interno: {str(e)}"
         )
 
-# ... (adicionar aqui as outras rotas com o mesmo padrão)
+# Exemplo de outra rota - adicione todas as outras rotas necessárias
+@app.post("/pdf-para-word")
+async def pdf_para_word(file: UploadFile = File(...)):
+    try:
+        caminhos = salvar_arquivos([file])
+        caminho = caminhos[0]
+        nome_base = os.path.splitext(os.path.basename(caminho))[0]
+        saida = os.path.join(WORK_DIR, f"pdf2docx_{nome_base}.docx")
+        
+        if os.path.exists(saida):
+            os.remove(saida)
+            
+        try:
+            cv = Converter(caminho)
+            cv.convert(saida)
+            cv.close()
+            
+            if not os.path.exists(saida):
+                raise Exception("Arquivo de saída não foi gerado")
+                
+            return FileResponse(
+                saida,
+                filename=os.path.basename(saida),
+                media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+        except Exception as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Falha na conversão: {str(e)}"
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro interno: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn
