@@ -1,8 +1,8 @@
-fastapi
-uvicorn
-pillow
-pytesseract
+streamlit
 PyPDF2
 pdf2docx
+pillow
+pytesseract
 pdf2image
-python-multipart
+img2pdf
+unoserver
