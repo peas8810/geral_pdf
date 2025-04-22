@@ -204,7 +204,7 @@ def main():
     
     # Rodapé
     st.sidebar.markdown("---")
-    st.sidebar.markdown("Desenvolvido com Streamlit")
+    st.sidebar.markdown("Desenvolvido por PEAS.Co")
     
     # Executa a função selecionada
     if opcao == "PDF para Word":
