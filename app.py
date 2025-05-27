@@ -216,6 +216,11 @@ def main():
     elif opcao == "Imagens para PDF":
         jpg_para_pdf()
 
+
+if __name__ == "__main__":
+    main()
+
+
 # --- Seção de Propaganda ---
 
  # Incorporação de website (exemplo de iframe para propaganda)
@@ -226,6 +231,3 @@ st.subheader("Técnica PROATIVA: Domine a Criação de Comandos Poderosos na IA 
 # Exibição de imagem para propaganda (substitua a URL pela sua imagem)
 image_url = "https://static-media.hotmart.com/cu0MontuJsAjZltv6bttoE1zxbI=/filters:quality(100):format(webp)/klickart-prod/uploads/media/file/9314924/imagem_-_proativa.jpg"
 st.image(image_url, caption="Anuncie aqui", use_container_width=True)
-
-if __name__ == "__main__":
-    main()
