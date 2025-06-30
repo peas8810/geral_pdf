@@ -6,3 +6,5 @@ pytesseract
 pdf2image
 img2pdf
 unoserver
+qrcode
+pillow
